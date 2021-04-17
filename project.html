@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+* {
+  box-sizing: border-box;
+}
+
+body {
+  background-image: url('rmk2.jpg') ; 
+  background-size:cover; 
+  background-attachment: fixed;
+  font: 16px arial;  
+}
+
+
+.autocomplete {
+  position: relative;
+  display: inline-block;
+}
+
+input {
+  border: 1px solid transparent;
+  background-color: #f73c3c;
+  padding: 10px;
+  font-size:14px;
+  
+}
+
+input[type=text] {
+  background-color: #e4e4e4;
+  width: 100%;
+  
+}
+
+input[type=submit] {
+  background-color: rgb(59, 33, 202);
+  color: #fff;
+  cursor: pointer;
+}
+
+.autocomplete-items {
+  position: absolute;
+  border: 1px solid #58e2b9;
+  border-bottom: none;
+  border-top: none;
+  z-index: 99;
+  
+  top: 100%;
+  left:0%;
+}
+
+.autocomplete-items div {
+  padding: 10px;
+  cursor: pointer;
+  background-color: rgb(198, 209, 255); 
+  border-bottom: 1px solid #ff2252; 
+}
+
+
+.autocomplete-items div:hover {
+  background-color: #ff77b0; 
+}
+
+
+.autocomplete-active {
+  background-color: rgb(238, 135, 166) !important; 
+  color: #ffffff; 
+}
+</style>
+</head>     
+<body>
+
+<h2>WORD AUTO SUGGESTION</h2>
+
+<p>START TYPING:</p>
+
+  <div class="autocomplete" style="width:300px;">
+    <input id="myInput" type="text" name="mysuggestion" placeholder="Search word related with computer language">
+  </div>
+  <input id="submit" type="submit">
+  <div id="search-output"></div>
+<script>
+
+function autocomplete(inp, arr) {
+ 
+  var currentFocus;
+ 
+  inp.addEventListener("input", function(e) {
+      var a, b, i, val = this.value;
+     
+      closeAllLists();
+      if (!val) { return false;}
+      currentFocus = -1;
+      
+      a = document.createElement("DIV");
+      a.setAttribute("id", this.id + "autocomplete-list");
+      a.setAttribute("class", "autocomplete-items");
+      
+      this.parentNode.appendChild(a);
+      
+      for (i = 0; i < arr.length; i++) {
+        
+        if (arr[i].substr(0, val.length).toUpperCase() == val.toUpperCase()) {
+          
+          b = document.createElement("DIV");
+         
+          b.innerHTML = "<strong>" + arr[i].substr(0, val.length) + "</strong>";
+          b.innerHTML += arr[i].substr(val.length);
+          
+          b.innerHTML += "<input type='hidden' value='" + arr[i] + "'>";
+          
+          b.addEventListener("click", function(e) {
+              
+              inp.value = this.getElementsByTagName("input")[0].value;
+             
+              closeAllLists();
+          });
+          a.appendChild(b);
+        }
+      }
+  });
+  
+  inp.addEventListener("keydown", function(e) {
+      var x = document.getElementById(this.id + "autocomplete-list");
+      if (x) x = x.getElementsByTagName("div");
+      if (e.keyCode == 40) {
+       
+        currentFocus++;
+        
+        addActive(x);
+      } else if (e.keyCode == 38) { 
+        
+        currentFocus--;
+        
+        addActive(x);
+      } else if (e.keyCode == 13) {
+       
+        e.preventDefault();
+        if (currentFocus > -1) {
+          
+          if (x) x[currentFocus].click();
+        }
+      }
+  });
+  function addActive(x) {
+    
+    if (!x) return false;
+   
+    removeActive(x);
+    if (currentFocus >= x.length) currentFocus = 0;
+    if (currentFocus < 0) currentFocus = (x.length - 1);
+   
+    x[currentFocus].classList.add("autocomplete-active");
+  }
+  function removeActive(x) {
+    
+    for (var i = 0; i < x.length; i++) {
+      x[i].classList.remove("autocomplete-active");
+    }
+  }
+  function closeAllLists(elmnt) {
+    
+    var x = document.getElementsByClassName("autocomplete-items");
+    for (var i = 0; i < x.length; i++) {
+      if (elmnt != x[i] && elmnt != inp) {
+        x[i].parentNode.removeChild(x[i]);
+      }
+    }
+  }
+ 
+  document.addEventListener("click", function (e) {
+      closeAllLists(e.target);
+  });
+}
+
+
+var words = ["how to learn python","how to learn c++","how to learn java","how to make coffee","how to make good learning","how to buy a car","aeroplane","attendance","attack","attack on titan","death note","zero","one","absoulte","value","absoulte value","machine language","assembly language","binary language","numeric language","none","number","new","noise","none","number","new","noise","computer","cpu","gpu","digital commnication","Coding terminology","Algorithm","Argument","Arrays","Arithmetic operators","Arithmetic operators","Augmented reality","Autonomous","Binary numbers","Bit","C++","Camel case","Coding","Coding languages","Computer program","Conditional statements","Else statements","For loops","Functions","If statements","Integrated Development Environment ","IntelliJ","Java","Jupyter Notebook","Linux","Loops","Main function","Machine learning","Micro:bit","Neural networks","Python","Scratch","Scripts","Sprites","Statement","TensorFlow","Training","Variable","Variable types","While loops","automation","machinery","mechanics","mechanization","robotics","telecommunications","applied science","tech","technicology","technological","IT","high-tech","technophile","low-tech","astronautics","technologist","robotics","techie","tech","electronics","cyberphobia","infotech","digital","technologically","technophobe","avionics","telecommunication","ICT","antitechnology","rocketry","cyberpunk","animatronics","technetronic","high technology","high tech","technoid","CTC","computerese","at","techno-","nucleonics","VoIP","sunset","hydraulics","stem","institute","telephony","nanotechnology","futuristic","technol","art","technol","the green revolution","BMT","advanced","technism","technomania","Master of Science","period","condemn","construe","predicate","clause","parse","question","adjudge","judge","convict","motto","comma","doom","reprieve","interrogative","conditional","it","construction","expletive","protasis","apodosis","respite","parenthesis","and","sentential","execution","anacoluthon","phrase","simple sentence","execute","censure","absolute","cadence","independent clause","semicolon","declarative","case","suspension","compound sentence","syntax","main clause","conjunction","pc","input","computerize","download","CAD","Cam","hack","upload","computor","cyber","processor","hacker","compute","online","desktop","document","code","crash","access","program","microcomputer","notebook","digital computer","printout","compiler","bug","programmer","digital","keyboard","enter","format","bootstrap","computator","machine","hardware","software","monitor","query","qualify","quality","quarter","quest","quantity","queue","quick","quit","quiz","quote","RAM","random access memory","real-time","reboot","resolution","restore","ROM","read only memory","root","router","runtime","undo","Unix","upload","URL","user","user interface","username","utility","web","webhost","webmaster","website","widget","wiki","window","Windows","wireless","wordprocessor","workstation","World Wide Web","worm","WWW","XML","zip","offline","online","open source","operating system","option","output","gigabyte","graphics","icon","inbox","integer","interface","Internet","IP address","iteration","backup","bandwidth","binary","bit","bite","bitmap","blog","blogger","bookmark","boot","broad","band","browser","buffer","bug","bus","byte","email","emoticon","encrypt","encryption","enter","exabyte","FAQ (frequentlyaskedquestions)","file","finder","firewall","firmware","flaming","flash","flashdrive","floppy disk","flowchart","folder","font","format","frame","freeware","dashboard","data","data mining","database","debug","decompress","delete","desktop","development","digital","disk","DNS (domain name system)","document","domain","domain name","dot","dot matrix","download","drag","DVD (digital versatile disc)","dynamic","Macintosh","macro","mainframe","malware","media","memory","mirror","modem","monitor","motherboard","mouse","multimedia","laptop","laser printer","link","Linux","log out","logic","login","lurking","table","tag","teminal","template","terabyte","text editor","thread","toolbar","trash","Trojan horse","typeface","version","virtual","virtual memory","virus","autocomplete","how to begin java script","to begin a programing language","make a easy html script","going","graphics processing","RMK","RMKCET","RMD","C","CYTHON","YEAP","YARN","yep","yoyo","yock","general",];
+
+
+
+autocomplete(document.getElementById("myInput"), words);
+document.getElementById("submit").addEventListener("click", function() {
+  document.getElementById("search-output").innerHTML = "can you see some suggestion";
+}); 
+</script>
+
+</body>
+</html>
